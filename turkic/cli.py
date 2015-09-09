@@ -87,7 +87,7 @@ class LoadCommand(object):
         self(args, group)
 
     def __call__(self, args, group):
-        raise NotImplementedError("__call__() must be defined") 
+        raise NotImplementedError("__call__() must be defined")
 
     def title(self, args):
         raise NotImplementedError()
@@ -112,7 +112,7 @@ class LoadCommand(object):
 
     def minapprovedpercent(self, args):
         return 90
-        
+
 importparser = argparse.ArgumentParser(add_help=False)
 importparser.add_argument("--title", default = None)
 importparser.add_argument("--description", default = None)
@@ -376,7 +376,7 @@ class compensate(Command):
             rejectkeys.extend(line.strip() for line in open(f))
         for f in args.warn:
             warnkeys.extend(line.strip() for line in open(f))
-            
+
         try:
             query = session.query(HIT)
             query = query.filter(HIT.completed == True)
@@ -420,6 +420,7 @@ class setup(Command):
         parser.add_argument("--database", action="store_true")
         parser.add_argument("--reset", action="store_true")
         parser.add_argument("--public-symlink", action="store_true")
+        parser.add_argument("--public-symlink-local", action="store_true")
         parser.add_argument("--no-confirm", action="store_true")
         return parser
 
@@ -465,7 +466,17 @@ class setup(Command):
                 print "Could not create symlink!"
             else:
                 print "Created symblink {0} to {1}".format(public, target)
-                
+
+        if args.public_symlink_local:
+            target = os.getcwd() + "/public/turkic"
+            public = os.path.dirname(os.getcwd()) + "/turkic/turkic/public"
+            try:
+                os.symlink(public, target)
+            except OSError:
+                print "Could not create symlink!"
+            else:
+                print "Created symblink {0} to {1}".format(public, target)
+
         if args.database:
             self.database(args)
 
@@ -498,7 +509,7 @@ class invalidate(Command):
             query = query.filter(HIT.workerid == args.id)
 
         for hit in query:
-            replacement = hit.invalidate() 
+            replacement = hit.invalidate()
             session.add(hit)
             print "Invalidated {0}".format(hit.hitid)
 
