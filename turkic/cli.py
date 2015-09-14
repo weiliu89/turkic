@@ -447,7 +447,7 @@ class setup(Command):
             if args.no_confirm:
                 self.resetdatabase()
             else:
-                resp = raw_input("Reset database? ").lower()
+                resp = raw_input("Reset database (y/N)? ").lower()
                 if resp in ["yes", "y"]:
                     self.resetdatabase()
                 else:
