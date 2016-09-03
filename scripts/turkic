@@ -2,7 +2,7 @@
 
 import os, sys
 cwd = os.getcwd()
-sys.path.append(cwd)
+sys.path.insert(0, cwd)
 
 try:
     import config
